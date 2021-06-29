@@ -1,0 +1,24 @@
+/* .nav
+{
+    background-color: aquamarine;
+    margin: 0;
+} */
+
+.nav
+{
+    background-color: #1A2238 ;
+    color: #FF6A3D;
+    text-align: center;
+    font-size:x-large;
+    display: flex;
+    /* padding-bottom: 1rem; */
+    margin-bottom: 1rem;
+}
+
+.Header h1
+{
+    text-align: left;
+    padding-left: 10px;
+    width: 50%;
+    font-size: xx-large;
+}
