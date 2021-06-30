@@ -66,11 +66,6 @@ body
     padding-left: 1%;
 }
 
-.MAIN
-{
-    padding-left: 30%;
-}
-
 .sin
 {
     background-color:#9DAAF2;
@@ -83,5 +78,34 @@ body
 {
     height: 2vw;
     width: 2vw;
+    border-color: #1A2238;
+    outline: 2px solid #1A2238;
+    display: inline-block;
     /* aspect-ratio: 100; */
 } 
+.stop
+{
+    height: 2vw;
+    width: 2vw;
+    border-color: #1A2238;
+    outline: 2px solid #1A2238;
+    display: inline-block;
+}
+.nowall
+{
+    height: 2vw;
+    width: 2vw;
+    border-color: #1A2238;
+    outline: 2px solid #1A2238;
+    display: inline-block;
+    /* border: #1A2238; */
+}
+
+.grid
+{
+    margin-left: 17vw;
+    margin-top: 2vw;
+}
+
+
+/* rgb(175, 216, 248) */

@@ -1,21 +1,22 @@
 /* eslint-disable no-unused-vars */
 import './ALLCSS.css';
 import react,{ useState}  from 'react';
-import start from './shuttle.png';
-import stop from './shuttle (1).png';
+
+import start from './ss.PNG';
+
+import visited from './v2.PNG';
+import way from './way.PNG';
+import noway from './wall.jpg';
+
+import stop from './ss.PNG';
+
+
 function App() 
 {
-	const total_rows=15;
-	const total_cols=30;
+
 	const [Grid,UpdateGrid]=useState([
 		[
-		  0, 0, 0, 0, 0, 0, 0, 0, 0,
-		  0, 0, 0, 0, 0, 0, 0, 0, 0,
-		  0, 0, 0, 0, 0, 0, 0, 0, 0,
-		  0, 0, 0
-		],
-		[
-		  0, 0, 0, 0, 0, 0, 0, 0, 0,
+		  2, 0, 0, 0, 0, 0, 0, 0, 0,
 		  0, 0, 0, 0, 0, 0, 0, 0, 0,
 		  0, 0, 0, 0, 0, 0, 0, 0, 0,
 		  0, 0, 0
@@ -97,30 +98,35 @@ function App()
 		  0, 0, 0, 0, 0, 0, 0, 0, 0,
 		  0, 0, 0, 0, 0, 0, 0, 0, 0,
 		  0, 0, 0
+		],
+		[
+		  0, 0, 0, 0, 0, 0, 0, 0, 0,
+		  0, 0, 0, 0, 0, 0, 0, 0, 0,
+		  0, 0, 0, 0, 0, 0, 0, 0, 0,
+		  0, 0, 3
 		]
 	  ]);
 	
+	const [Busy,Update]=useState(false);
+
 	function handleClick(event)
 	{
+		if(Busy===true)return;
 		const where=event.target.id;
+
 		const r=(where-where%1000)/1000;
 		const c=where%1000;
+
+		if(r===0 && c===0)return;
+		if(r===14 && c===29)return;
+		
 		var temp=Grid;
-		if(temp[r][c]!==2 && temp[r][c]!==3)
-		{
-			temp[r][c]=temp[r][c]===1?0:1;
-		}
+		if(temp[r][c]===1){temp[r][c]=0;}
+		else {temp[r][c]=1;}
 		UpdateGrid(temp);
-		if(r===0 && c===0)
-		{
-			var el=event.target.innerHTML;
-			console.log(el);
-		}
-		// console.log(event);
-		// console.log(event.target.outerHTML);
-		// event.target.outerHTML="<img class=\"start\" src=\"{stop}\" ></img>";
-		// console.log(event.target.outerHTML);
-		// event.target.innerHTML="*";
+
+		if(event.target.src===noway){event.target.src=way;}
+		else{event.target.src=noway;}
 	}
 
 	function DIP(r,c)
@@ -132,19 +138,19 @@ function App()
 		if(r===0 && c===0)
 		{
 			return(
-				<button className={cl} state={Grid[r][c]} onClick={handleClick} id={ide} ><img src={start} id="2" className="start" alt="s"></img></button>
+				<img src={start} alt="start" className="start" id={ide} onClick={handleClick}></img>
 			);
 		}
 		else if(r===14 && c===29)
 		{
 			return(
-				<button className={cl} state={Grid[r][c]} onClick={handleClick} id={ide} ><img src={stop} id="3" className="start" alt="s"></img></button>
+				<img src={stop} alt="stop" className="stop" id={ide} onClick={handleClick}></img>
 			);
 		}
 		else
 		{
 			return(
-				<button className={cl} state={Grid[r][c]} onClick={handleClick} id={ide} >.</button>
+				<img src={way} alt="nowall" className="nowall" id={ide} onMouseOver={handleClick}></img>
 			);
 		}
 	}
@@ -173,11 +179,70 @@ function App()
 				{DISPLAY( 0)} {DISPLAY( 1)}{DISPLAY( 2)}{DISPLAY( 3)}{DISPLAY(4)}
 				{DISPLAY( 5)} {DISPLAY( 6)}{DISPLAY( 7)}{DISPLAY( 8)}{DISPLAY(9)}
 				{DISPLAY(10)} {DISPLAY(11)}{DISPLAY(12)}{DISPLAY(13)}{DISPLAY(14)}
-				{/* {DISPLAY(15)} {DISPLAY(16)}{DISPLAY(17)}{DISPLAY(18)}{DISPLAY(19)} */}
-				{/* {DISPLAY(20)} {DISPLAY(21)}{DISPLAY(22)}{DISPLAY(23)}{DISPLAY(24)} */}
-				
 			</div>
 		);
+	}
+
+	function clearg()
+	{
+		if(Busy===true)return;
+
+		var temp=Grid;
+		for(var i=0;i<15;i++)
+		{
+			for(var j=0;j<30;j++)
+			{
+				if(i===0 && j===0){continue;}
+				if(i===14 && j===29){continue;}
+				temp[i][j]=0;
+				var ide=i*1000+j;
+				document.getElementById(ide).src=way;
+			}
+		}
+		temp[0][0]=2;
+		temp[14][29]=3;
+		document.getElementById(0).src=start;
+		UpdateGrid(temp);
+	}
+
+	function DFSI()
+	{
+		Update(true);
+		DFS(0,0);	
+		Update(false);
+	}
+	const [path,UpdatePath]=useState([]);
+	function DFS(i,j)
+	{
+		setTimeout( ()=>
+		{
+			
+			if(i<0 || i>14 || j<0 || j>29)return;
+	
+			if(Grid[i][j]===3)
+			{
+				document.getElementById(0).src=stop;
+				return;
+			}
+			
+			if(Grid[i][j]===0 || Grid[i][j]===2)
+			{
+				
+				if(Grid[i][j]!==2)
+				{
+					document.getElementById(i*1000+j).src=visited;
+				}
+				var temp=Grid;
+				temp[i][j]=10;
+				UpdateGrid(temp);
+				
+				DFS(i+1,j);
+				DFS(i,j+1);
+				DFS(i-1,j);
+				DFS(i,j-1);
+			}
+		},
+		90);
 	}
   	return (
 		<div className="App">
@@ -186,8 +251,8 @@ function App()
 			<div className="button">
 				<button className="buttons">Dijkstra</button>
 				<button className="buttons">BFS</button>
-				<button className="buttons">DFS</button>
-				<button className="buttons">Clear Grid</button>
+				<button className="buttons" onClick={DFSI}>DFS</button>
+				<button className="buttons" onClick={clearg}>Clear Grid</button>
 			</div>
     	
 		</div>
