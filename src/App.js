@@ -108,11 +108,12 @@ class App extends React.Component
 		  ],
 		  Busy:false,
 		  path:[],
-		  dfstack:[]
+		  dfstack:[],
+		  dfstime:0
 		};
 		this.handleClick=this.handleClick.bind(this);
 		this.clearg=this.clearg.bind(this);
-		
+		// this.temp=this.temp.bind(this);
 		this.DFSI=this.DFSI.bind(this);
 		this.DFS=this.DFS.bind(this);
 		this.Innerwhile=this.Innerwhile.bind(this);
@@ -148,13 +149,13 @@ class App extends React.Component
 		if(r===0 && c===0)
 		{
 			return(
-				<img src={start} alt="start" className="start" id={ide} onClick={this.handleClick}></img>
+				<img src={start} alt="start" className="start" id={ide}></img>
 			);
 		}
 		else if(r===14 && c===29)
 		{
 			return(
-				<img src={stop} alt="stop" className="stop" id={ide} onClick={this.handleClick}></img>
+				<img src={stop} alt="stop" className="stop" id={ide}></img>
 			);
 		}
 		else
@@ -219,7 +220,7 @@ class App extends React.Component
 	DFSI()
 	{
 		this.setState({Busy:true});
-		this.DFS(0,0);	
+		this.DFS();	
 		this.setState({Busy:false});
 	}
 	//  DFS(i,j)
@@ -266,9 +267,11 @@ class App extends React.Component
 	// 	// 90);
 	// }
 
-	Innerwhile(sstack)
+	Innerwhile()
 	{
-		var stack=sstack;
+		var stack=this.state.dfstack;
+		console.log(stack);
+		if(stack.length===0){clearInterval(this.state.dfstime);return;}
 
 		var s= stack[stack.length-1];
 		stack.pop();
@@ -284,16 +287,17 @@ class App extends React.Component
 			// returns.push(stack);
 			// returns.push(done);
 			// return returns;
-			// this.setState({dfstack:[]});
-			return []; 
+			this.setState({dfstack:[]});
+			clearInterval(this.state.dfstime);
+			// return []; 
 		}
 		if(val===10 || val===1)
 		{
 			// returns.push(stack);
 			// returns.push(done);
 			// return returns;
-			// this.setState({dfstack:stack});
-			return stack;
+			this.setState({dfstack:stack});
+			// return stack;
 		}
 
 		let temp=this.state.Grid;
@@ -304,22 +308,38 @@ class App extends React.Component
 		if(r<14){stack.push(r*1000+c+1000);}
 		if(c<29){stack.push(r*1000+c+1);}
 		// returns.push(done);
-		// this.setState({dfstack:stack});
-		return stack;
+		this.setState({dfstack:stack});
+		// return stack;
 	}
 
 	DFS()
 	{
 		var stack =[];
-		// this.setState({dfstack:[]});
 		stack.push(0);
-		// console.log(this.state.);
-		while(stack.length!==0)
-		{
+		this.setState({dfstack:stack});
+		var myintr=setInterval(this.Innerwhile(),1);
+		this.setState({dfstime:myintr});
+		// setInterval(this.Innerwhile(),90);
+		// var intr = setInterval(this.Innerwhile(), 900);
+
+		// stack=this.state.dfstack;
+		// if(stack.length===0)clearInterval(intr);
+		// (async () => 
+		// {
+		// 	var i=0;
+		// 	while (await new Promise(resolve => setTimeout(() => {console.log("mf");}, 10)) < 1) 
+		// 	{
+		// 		this.Innerwhile();
+		// 		stack=this.state.dfstack;
+		// 		if(stack.length===0)break;
+		// 	}
+		// })();
+		// while(stack.length!==0)
+		// {
 			// this.setState({dfstack:stack});
 			// console.log(this.dfstack);
-			// setTimeout(this.Innerwhile(),90);
-			stack=this.Innerwhile(stack);
+			// setTimeout((stack)=>{stack=this.Innerwhile(stack)},90);
+			// stack=this.Innerwhile(stack);
 			// stack=this.state.dfstack;
 			// console.log(stack);
 
@@ -340,7 +360,7 @@ class App extends React.Component
 
 			// if(r<14){stack.push(r*1000+c+1000);}
 			// if(c<29){stack.push(r*1000+c+1);}
-		}
+		// }
 	}
 
 	render()
@@ -353,7 +373,7 @@ class App extends React.Component
 				<div className="button">
 					<button className="buttons">Dijkstra</button>
 					<button className="buttons">BFS</button>
-					<button className="buttons" onClick={this.DFS}>DFS</button>
+					<button className="buttons" onClick={this.DFSI}>DFS</button>
 					<button className="buttons" onClick={this.clearg}>Clear Grid</button>
 				</div>
 			
