@@ -109,3 +109,14 @@ body
 
 
 /* rgb(175, 216, 248) */
+
+
+::-webkit-scrollbar 
+{
+	width: 0.75vw;
+}
+::-webkit-scrollbar-thumb 
+{
+	border-radius: 25px;
+    background: #3c4b70; 
+}
