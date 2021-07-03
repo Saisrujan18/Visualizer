@@ -38,14 +38,32 @@ body
     text-align: center;
     background: 0;
     border: 0;
-    padding-left: 6%;
-    padding-right: 5%;
     color: #9DAAF2;
-    font-size: 1.5rem;
-    font-weight: 900;
-    margin-right: 0.25em;
+    /* color: #202b46; */
+    font-size: 2vw;
+    font-weight: 400;
+    margin-top: 0.5vw;
+    margin-bottom: 0.5vw;
     transition: opacity 250ms ease-in;
 }
+
+.cl
+{
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif; 
+    text-align: center;
+    background: 0;
+    border: 0;
+    color:  #F4DB78;
+    /* color: #202b46; */
+    font-size: 2vw;
+    font-weight: 500;
+    margin-top: 0.5vw;
+    margin-bottom: 0.5vw;
+    transition: opacity 250ms ease-in;
+}
+
+.cl:hover{opacity: 0.7;}
 
 .buttons:hover 
 {opacity: 0.7} 
@@ -55,15 +73,14 @@ body
 {
     display: flex;
     flex-direction: row;
+    justify-content: space-evenly;
     background-color: #1A2238;
+    /* background-color: #202b46; */
     border-radius: 25px;
-    margin-top: 2%;
-    margin-left: 22%;
-    margin-right: 30%;
-    margin-bottom: 2%;
-    padding-bottom: 0.5%;
-    padding-top: 0.25%;
-    padding-left: 1%;
+    margin-left: 20vw;
+    margin-right: 25vw;
+    margin-top: 1vw;
+    margin-bottom: 1vw;
 }
 
 .sin
