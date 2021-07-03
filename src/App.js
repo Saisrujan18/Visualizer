@@ -7,11 +7,7 @@ import way from './way.PNG';
 import noway from './wall.jpg';
 import stop from './ss.PNG';
 
-// import Node from './Node/Node';
 import {dijkstra, getNodesInShortestPathOrder} from './Components/Dijkstra.js';
-
-
-// import Node from './Components/Node';
 
 class App extends React.Component 
 {
@@ -125,7 +121,8 @@ class App extends React.Component
 		this.BFS=this.BFS.bind(this);
 		this.Binnerwhile=this.Binnerwhile.bind(this);
 
-		// this.DIJKSTRA=this.DIJKSTRA.bind(this);
+		this.DIJ=this.DIJ.bind(this);
+		this.getInitialGrid=this.getInitialGrid.bind(this);
 	}
 
 	handleClick(event)
@@ -262,25 +259,26 @@ class App extends React.Component
 		{
 			if(i===nodes.length)
 			{
-				setTimeout(() =>{this.animateShort(short);}, 20*i);
+				setTimeout(() =>{this.animateShort(short);}, 10*i);
 				return;
 			}
 			setTimeout(() => 
 			{
 				const node = nodes[i];
 				if(node!==0)document.getElementById(node).src=visited;
-			  }, 20 * i);
+			  }, 10 * i);
 		}
 	}
 
 	animateShort(short)
 	{
+		// console.log(short);
 		for (let i = 0; i < short.length; i++) 
 		{
 			setTimeout(() => {
 			  const node = short[i];
 			  document.getElementById(node).src=start;
-			}, 100*i);
+			}, 50*i);
 		}
 	}
 
@@ -396,131 +394,78 @@ class App extends React.Component
 			this.animatedfs(answer,inorder);
 		}
 	}
-	// node(r,c,val,distance,prev)
-	// {
-	// 	return {r,c,val,distance,prev};
-	// 	// this.r=r;
-	// 	// this.c=c;
-	// 	// this.val=val;
-	// 	// this.distance=dist;
-	// 	// this.prev=prev;
-	// }
-	// DIJKSTRA() 
-	// {
-	// 	var visitedNodesInOrder = [];
-	// 	var unvisitedNodes = this.getAllNodes(this.state.Grid);
-	// 	// console.log(unvisitedNodes);
-	// 	unvisitedNodes[0].distance=0;
-	// 	console.log(unvisitedNodes);
-	// 	for(var i=0;i<15*30;i++)
-	// 	{
-	// 		if(unvisitedNodes[i].distance===0)
-	// 		{
-	// 			console.log(i);
-	// 		}
-	// 	}	
-	// 	var grid=this.gridform(this.state.Grid);
-	// 	grid[0][0].distance=0;
+	
+	DIJ()
+	{
+		var G=this.getInitialGrid(this.state.Grid);
+		const startNode = G[0][0];
+    	const finishNode = G[14][29];
+    	const visitedNodesInOrder = dijkstra(G, startNode, finishNode);
+    	const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+    	this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+	}
 
-	// 	while (!!unvisitedNodes.length) 
-	// 	{
-	// 		this.sortNodesByDistance(unvisitedNodes);
-	// 		console.log(unvisitedNodes);
-	// 		const closestNode = unvisitedNodes.shift();
-			
-	// 		if (closestNode.val===3)break;
+	getInitialGrid(penaldo)
+	{
+		const grid = [];
+		for (let row = 0; row < 15; row++) 
+		{
+			const currentRow = [];
+			for (let col = 0; col < 30; col++) 
+			{
+				currentRow.push(this.createNode(col, row,penaldo[row][col]));
+			}
+			grid.push(currentRow);
+		}
+		return grid;
+	}
+	  
+	createNode(col,row,v)
+	{
+		return {
+		  col,
+		  row,
+		  isStart: row === 0 && col === 0,
+		  isFinish: row === 14 && col === 29,
+		  distance: Infinity,
+		  isVisited: false,
+		  isWall: (v===1),
+		  previousNode: null,
+		}
+	}
 
-	// 		if (closestNode.val===1)continue;
-	// 		if (closestNode.distance===Infinity)break;
-			
-	// 		var temp=this.state.Grid;
-	// 		var r=closestNode.r;
-	// 		var c=closestNode.c;
-	// 		temp[r][c]=10;
-	// 		this.setState({Grid:temp});
-			
-	// 		closestNode.val=10;
-	// 		visitedNodesInOrder.push(closestNode);
-	// 		this.updateUnvisitedNeighbors(closestNode, grid);
-	// 	}
-	// 	var answer=[];
-	// 	for(var i=0;i<visitedNodesInOrder.length;i++)
-	// 	{
-	// 		answer.push(visitedNodesInOrder[i].r*1000+visitedNodesInOrder[i].c);
-	// 	}
-	// 	console.log(visitedNodesInOrder);
+	animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) 
+	{
+		for (let i = 0; i <= visitedNodesInOrder.length; i++) 
+		{
+			if (i === visitedNodesInOrder.length) 
+			{
+				setTimeout(() => {
+					this.animateShortestPath(nodesInShortestPathOrder);
+				}, 10 * i);
+				return;
+			}
+			setTimeout(() => 
+			{
+				const node = visitedNodesInOrder[i].row*1000+visitedNodesInOrder[i].col;
+				document.getElementById(node).src=visited;
+			},
+			10 * i);
+		}
+	}
+	
+	animateShortestPath(nodesInShortestPathOrder) 
+	{
+		for (let i = 0; i < nodesInShortestPathOrder.length; i++) 
+		{
+			setTimeout(() => 
+			{
+				const node = nodesInShortestPathOrder[i].row*1000+nodesInShortestPathOrder[i].col;
+				document.getElementById(node).src=start;
+			}, 50 * i);
+		}
+	}
 
-
-	// 	this.animatedfs(answer,[]);
-	// }
-	// sortNodesByDistance(unvisitedNodes) 
-	// {
-	// 	unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
-	// }
-	// updateUnvisitedNeighbors(node, grid) 
-	// {
-	// 	const unvisitedNeighbors = this.getUnvisitedNeighbors(node, grid);
-	// 	for (const neighbor of unvisitedNeighbors) 
-	// 	{
-	//  		neighbor.distance = node.distance + 1;
-	// 		neighbor.prev = node;
-	// 	}
-  	// }
-	// gridform(grid)
-	// {
-	// 	const nodes = [];
-	// 	for(var i=0;i<15;i++)
-	// 	{
-	// 		var temp=[];
-	// 		for(var j=0;j<30;j++)
-	// 		{
-	// 			var nod=this.node(i,j,grid[i][j],Infinity,null);
-	// 			// console.log(nod);
-	// 			// nodes.push(nod);
-	// 			temp.push(nod);
-	// 		}
-	// 		nodes.push(temp);
-	// 	}
-	// 	return nodes;
-	// }
-	// getUnvisitedNeighbors(node, grid) 
-	// {
-	// 	const neighbors = [];
-	// 	const {c, r} = node;
-	// 	if (r > 0) neighbors.push(grid[r - 1][c]);
-	// 	if (r < 14) neighbors.push(grid[r + 1][c]);
-	// 	if (c > 0) neighbors.push(grid[r][c - 1]);
-	// 	if (c < 29) neighbors.push(grid[r][c + 1]);
-	// 	// console.log(neighbors);
-	// 	return neighbors.filter(neighbor => (neighbor.val!==10));
-  	// }
-	// getAllNodes(grid) 
-	// {
-	// 	const nodes = [];
-	// 	for(var i=0;i<15;i++)
-	// 	{
-	// 		// var temp=[];
-	// 		for(var j=0;j<30;j++)
-	// 		{
-	// 			var nod=this.node(i,j,grid[i][j],Infinity,null);
-	// 			// console.log(nod);
-	// 			nodes.push(nod);
-	// 		}
-	// 		// nodes.push(temp);
-	// 	}
-	// 	return nodes;
-	// }
-	// getNodesInShortestPathOrder(grid) 
-	// {
-	// 	const nodesInShortestPathOrder = [];
-	// 	let currentNode = grid[14][29];
-	// 	while (currentNode !== null) 
-	// 	{
-	// 		nodesInShortestPathOrder.unshift(currentNode.r*1000+currentNode.c);
-	// 		currentNode = currentNode.prev;
-	// 	}
-	// 	return nodesInShortestPathOrder;
-  	// }
 	render()
 	{
 		return (
@@ -530,7 +475,7 @@ class App extends React.Component
 
 				<div className="button">
 					<button className="cl" onClick={this.clearg}>CLEAR</button>
-					<button className="buttons" onClick={this.DIJKSTRA}>DIJKSTRA</button>
+					<button className="buttons" onClick={this.DIJ}>DIJKSTRA</button>
 					<button className="buttons" onClick={this.BFS}>BFS</button>
 					<button className="buttons" onClick={this.DFSI}>DFS</button>
 				</div>
